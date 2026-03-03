@@ -8,12 +8,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Service   // Componente de lógica de negocio, manejado por el contenedor de Spring
 public class ProductoService {
 
-    @Autowired
+    @Autowired   // Inyección de Dependencia (DI) — Spring inyecta el repositorio automáticamente
     private ProductoRepository productoRepository;
-
     // Insertar un producto
     public Producto insertar(Producto producto) {
         return productoRepository.save(producto);

@@ -1,63 +1,50 @@
 package com.udb.desafio1;
 
 import com.udb.desafio1.entity.Producto;
-import com.udb.desafio1.repository.ProductoRepository;
 import com.udb.desafio1.service.ProductoService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class Desafio1ApplicationTests {
 
 	@Autowired
-	private ProductoService productoService;
+	ProductoService productoService;
 
-	@Autowired
-	private ProductoRepository productoRepository;
-
-	@BeforeEach
-	void limpiar() {
-		productoRepository.deleteAll();
+	@Test
+	@Order(1)
+	void insertar_registros_test() {
 		for (int i = 1; i <= 100; i++) {
 			Producto p = new Producto();
 			p.setNombre("Producto " + i);
 			p.setPrecio(i * 10.0);
 			productoService.insertar(p);
 		}
+		assertEquals(100, productoService.contarTodos());
 	}
 
 	@Test
-	void insertar_registros_test() {
-		long total = productoService.contarTodos();
-		assertEquals(100, total);
-	}
-
-	@Test
+	@Order(2)
 	void leer_registros_test() {
-		List<Producto> primeros25 = productoService.obtenerPrimeros25();
-		assertEquals(25, primeros25.size());
+		assertEquals(25, productoService.obtenerPrimeros25().size());
 	}
 
 	@Test
+	@Order(3)
 	void modificar_registro_test() {
-		Producto primero = productoRepository.findAll().get(49);
-		productoService.modificar(primero.getId(), "Producto Modificado", 999.99);
-		Producto modificado = productoService.obtenerPorId(primero.getId());
-		assertEquals("Producto Modificado", modificado.getNombre());
+		productoService.modificar(50L, "Modificado", 999.9);
+		Producto p = productoService.obtenerPorId(50L);
+		assertEquals("Modificado", p.getNombre());
 	}
 
 	@Test
+	@Order(4)
 	void borrar_registro_test() {
-		Producto aEliminar = productoRepository.findAll().get(74);
-		Long idEliminar = aEliminar.getId();
-		productoService.borrar(idEliminar);
-		Producto borrado = productoService.obtenerPorId(idEliminar);
-		assertNull(borrado);
+		productoService.borrar(75L);
+		assertNull(productoService.obtenerPorId(75L));
 	}
 }

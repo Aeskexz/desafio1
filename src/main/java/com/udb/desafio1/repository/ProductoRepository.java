@@ -6,8 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+@Repository   // Marca este componente como repositorio (parte del IoC de Spring)
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
-
-    List<Producto> findFirst25By();
+    List<Producto> findFirst25By();  // Spring genera el SQL automáticamente
 }
